@@ -1,10 +1,3 @@
-# TODO: This class does not scale well in case export to other file formats is to be added.
-#       (Also, the current implementation violates the DRY principle).
-#       To solve these issues, use dependency injection to make it possible to export a
-#       shopping cart into new data formats without having to change the `ShoppingCart` at all.
-#
-#       Note: in case you were wondering, we ignore product prices here because price handling
-#             may have been changed in exercise_1
 from typing import Protocol
 from dataclasses import dataclass
 from datetime import datetime
