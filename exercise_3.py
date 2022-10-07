@@ -15,7 +15,6 @@ class BoundingBox:
         return f"({point[0]}, {point[1]})"
 
 
-# `Point` interface expected by `get_bounding_box`
 class PointInterface(Protocol):
     @property
     def x(self) -> float:
@@ -52,7 +51,6 @@ class MyPoint:
         return self._coords[i]
 
 
-# TODO: Implement this adapter
 class MyPointAdapter:
     def __init__(self, point: MyPoint) -> None:
         self._point = point
@@ -75,8 +73,6 @@ if __name__ == "__main__":
     bbox = get_bounding_box(point_cloud)
     print("Bounding box with default point implementation: ", bbox)
 
-    # TODO: make it possible to use `get_bounding_box` also with a list of
-    #       instances of `MyPoint` by implementing the adapter
     my_points_impl_2 = [MyPoint((p.x, p.y)) for p in point_cloud]
     bbox = get_bounding_box([MyPointAdapter(p) for p in my_points_impl_2])
     print("Bounding box with MyPoint: ", bbox)
