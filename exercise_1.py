@@ -32,13 +32,13 @@ class Money:
         result = self._round_to_valid_amount(
             self._amount*Decimal(value)
         )
-        return Money(str(result))
+        return Money(result)
 
     def __truediv__(self, value: float) -> Money:
         result = self._round_to_valid_amount(
             self._amount/Decimal(value)
         )
-        return Money(str(result))
+        return Money(result)
 
     def __repr__(self) -> str:
         return str(self._amount)
