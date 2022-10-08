@@ -1,7 +1,7 @@
 from typing import Protocol
 from dataclasses import dataclass
 from datetime import datetime
-from exercise_1 import Product
+from exercise_1 import Product, Money
 
 
 class ShoppingCartWriter(Protocol):
@@ -92,9 +92,9 @@ if __name__ == "__main__":
     json_filename = "cart.json"
 
     cart = ShoppingCart()
-    cart.add(Product("Laptop", "999.00"))
-    cart.add(Product("Keyboard", "10.00"))
-    cart.add(Product("Keyboard", "10.00"))
+    cart.add(Product("Laptop", Money("999.00")))
+    cart.add(Product("Keyboard", Money("10.00")))
+    cart.add(Product("Keyboard", Money("10.00")))
     cart.export(XMLShoppingCartWriter(xml_filename))
     cart.export(JSONShoppingCartWriter(json_filename))
 

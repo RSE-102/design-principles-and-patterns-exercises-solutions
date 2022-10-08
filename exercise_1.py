@@ -1,16 +1,32 @@
+# This solutions pulls out the representation of amounts of money
+# into a separate class. This `Money` class makes sure that it can
+# only be constructed by a valid string representing money, i.e. we
+# requires no or 2 digits after the comma. It implements the required
+# interfaces to add/subtract amounts of money, and multiply/divide
+# by a scalar value.
+#
+# Moreover, we have pulled out the handling of discounts into a separate
+# class, which now allows to apply a discount on a given price, and this
+# class now is the central place in which we define & check what a valid
+# discount is (here: between 0 and 100 %)
+
 from __future__ import annotations
 from decimal import Decimal
 
 
 class Money:
-    def __init__(self, amount: str) -> None:
-        self._amount = Decimal(self._format_amount(amount))
+    def __init__(self, amount: str | Decimal) -> None:
+        if isinstance(amount, str):
+            self._amount = Decimal(self._format_amount(amount))
+        else:
+            assert amount.same_quantum(self._get_representative_decimal())
+            self._amount = amount
 
     def __add__(self, other: Money) -> Money:
-        return Money(str(self._amount + other._amount))
+        return Money(self._amount + other._amount)
 
     def __sub__(self, other: Money) -> Money:
-        return Money(str(self._amount - other._amount))
+        return Money(self._amount - other._amount)
 
     def __mul__(self, value: float) -> Money:
         result = self._round_to_valid_amount(
@@ -35,7 +51,10 @@ class Money:
         return money_str
 
     def _round_to_valid_amount(self, value: Decimal) -> Decimal:
-        return value.quantize(Decimal("1.00"))
+        return value.quantize(self._get_representative_decimal())
+
+    def _get_representative_decimal(self) -> Decimal:
+        return Decimal("1.00")
 
 
 class Discount:
@@ -43,8 +62,8 @@ class Discount:
         assert percentage >= 0.0 and percentage <= 100.0
         self._value = percentage/100.0
 
-    def __mul__(self, price: Money) -> Money:
-        return price*(float(self._value))
+    def apply(self, price: Money) -> Money:
+        return price*(1.0 - self._value)
 
 
 class Product:
@@ -67,7 +86,7 @@ class Product:
         assert not self._is_reduced()
         return Product(
             name=f"{self._name}{self._reduced_suffix()}",
-            price=self._price - discount*self._price
+            price=discount.apply(self._price)
         )
 
     def _is_reduced(self) -> bool:
