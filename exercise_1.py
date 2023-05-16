@@ -67,32 +67,31 @@ class Discount:
 
 
 class Product:
-    def __init__(self, name: str, price: Money) -> None:
+    def __init__(self, name: str, price: Money, has_discount: bool = False) -> None:
         self._name = name
         self._price = price
+        self._has_discount = has_discount
 
     def __repr__(self) -> str:
-        return f"Product: {self._name}, price: {self._price}"
+        return f"Product: {self.name}, price: {self._price}"
 
     @property
     def name(self) -> str:
-        return self._name
+        return self._name + (self._discount_suffix() if self._has_discount else "")
 
     @property
     def price(self) -> Money:
         return self._price
 
     def reduced(self, discount: Discount) -> Product:
-        assert not self._is_reduced()
+        assert not self._has_discount
         return Product(
-            name=f"{self._name}{self._reduced_suffix()}",
-            price=discount.apply(self._price)
+            name=self._name,
+            price=discount.apply(self._price),
+            has_discount=True
         )
 
-    def _is_reduced(self) -> bool:
-        return self._reduced_suffix() in self._name
-
-    def _reduced_suffix(self) -> str:
+    def _discount_suffix(self) -> str:
         return " (reduced)"
 
 
