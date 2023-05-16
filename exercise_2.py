@@ -74,7 +74,7 @@ class JSONShoppingCartWriter:
 
     def add_product_specs(self, *, name: str, **kwargs) -> None:
         self._file.write("," if not self._empty else "")
-        self._file.write(f'{{"name":"{name}"')
+        self._file.write(f'"name":"{name}"')
         for key, value in kwargs.items():
             self._file.write(f',"{key}":"{value}"')
         self._file.write("}")
